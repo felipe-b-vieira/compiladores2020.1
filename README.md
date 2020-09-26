@@ -12,3 +12,4 @@ Para execução, usar python3 examplelexer-test.py -v ou  py examplelexer-test.p
 
 Repositório atualizado com minha resolução da segunda atividade
 Para execução, usar python3 logproc-test.py -v ou py logproc-test.py -v.
+Apresentou problemas na execução do Windows, no entanto, funcionou sem problemas no Linux.
