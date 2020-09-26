@@ -20,7 +20,7 @@ def t_PROC(t):
     return t
 
 def t_MESSAGE(t):
-    r'.+\n+'
+    r'.+\n*'
     t.value = t.value[0:len(t.value) - 1]
     return t
 
@@ -48,7 +48,6 @@ class LogProcLexer:
                 break      # No more input
             if(tok.type == "PROC" and tok.value=="kernel"):
                 tok=self.lexer.token()
-                #print(tok)
                 tokens.append(tok)
         return tokens
         
