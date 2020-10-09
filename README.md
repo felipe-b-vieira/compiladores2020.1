@@ -13,3 +13,9 @@ Para execução, usar python3 examplelexer-test.py -v ou  py examplelexer-test.p
 Repositório atualizado com minha resolução da segunda atividade
 Para execução, usar python3 logproc-test.py -v ou py logproc-test.py -v.
 Apresentou problemas na execução do Windows, no entanto, funcionou sem problemas no Linux.
+
+# Atividade 3 - Análise Sintática
+
+Repositório atualizado com minha resolução da terceira atividade
+Para execução, usar python3 predparsing-test.py -v ou py predparsing-test.py -v.
+**Código não funcional, first acredito estar correto mas o follow não. Apresenta erro no teste.**
