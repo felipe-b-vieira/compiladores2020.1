@@ -18,4 +18,5 @@ Apresentou problemas na execução do Windows, no entanto, funcionou sem problem
 
 Repositório atualizado com minha resolução da terceira atividade
 Para execução, usar python3 predparsing-test.py -v ou py predparsing-test.py -v.
-**Código não funcional, first acredito estar correto mas o follow não. Apresenta erro no teste.**
+Código não funcional, first acredito estar correto mas o follow não. Apresenta erro no teste.(Antigo)
+**Código corrigido com ajuda de outros alunos, feito com o objetivo de preparar para o próximo trabalho, não para a atividade 3**
