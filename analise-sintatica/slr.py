@@ -48,6 +48,7 @@ def closure(s, g):
             break
     return clos
 
+
 def goto(s, x, g):
     '''
     Calculates GOTO(s, x) as defined to be the closure of the set of all items
@@ -57,11 +58,8 @@ def goto(s, x, g):
     for lhs, rhs, dot_idx in s:
         if dot_idx < len(rhs) and x == rhs[dot_idx]:
             singleton_set = {(lhs, rhs, dot_idx + 1)}
-            items = closure(singleton_set, g)
-            goto_sx = goto_sx.union(items)
-            break
-    return goto_sx
-        
+            goto_sx = goto_sx.union(singleton_set)
+    goto_sx = closure(goto_sx, g)
     return goto_sx
 
 def augment(g):
@@ -71,7 +69,7 @@ def augment(g):
     g.start_symbol = new_start_symbol
     g.non_terminals.append(new_start_symbol)
     g.first_tab[new_start_symbol] = set()
-    g.follow_tab[new_start_symbol] = set()    
+    g.follow_tab[new_start_symbol] = set()
 
 def canonical_items(g):
     '''
@@ -87,7 +85,7 @@ def canonical_items(g):
     #                 add GOTO(I, X) to C
     #   until no new set of items are added to C on a round
     # }
-    
+
     # Grammar g is assumed augmented
     s = g.start_symbol          # S'
     orig_s = s[:len(s) - 1]     # S
@@ -146,10 +144,11 @@ def slr_parsing_table(g):
                 #      and GOTO(Ii, a) = Ij then
                 #        set ACTION[i,􏰥a] =􏰙shift j.
                 #      Here a must be a terminal.􏰋
-                if (lhs + " -> " + "".join(rhs[:dot_idx])+"*"+a + "".join(rhs[dot_idx:]) and goto(i,a)==
+
                 # Do your magic here!
-                
+
             else:
+                print("-")
                 # (b) If [A -> alpha *] is in Ii, then set
                 # ACTION[i, a] = "reduce A -> alpha" to
                 # all a in FOLLOW(A); here A may not be S'.
@@ -157,17 +156,13 @@ def slr_parsing_table(g):
                 # ACTION[i, $] = "accept".
 
                 # Do your magic here!
-                
+
         # 3. The goto transitions for state i are constructed for all
         # nonterminals A using the rule􏰗 If GOTO(Ii, A) = Ij 􏰉
         # then GOTO[i,􏰥A] = j.􏰋
-        
-        # Do your magic here!
-        for j, itemj in enumerate(l):
-            if goto(i,rhs[dot_idx:]) == j:
-                goto(i,"*"+rhs[dot_idx:]) = j+"*"
+
                 # Do your magic here!
-                
+
     return (action_tab, goto_tab)
 
 def print_slr_table(act_tb, goto_tb):
@@ -175,7 +170,7 @@ def print_slr_table(act_tb, goto_tb):
     df = pd.DataFrame(act_tb).T
     df.fillna(0, inplace=True)
     print(tabulate(df, headers='keys', tablefmt='psql'))
-    print("GOTO table")    
+    print("GOTO table")
     df = pd.DataFrame(goto_tb).T
     df.fillna(0, inplace=True)
     print(tabulate(df, headers='keys', tablefmt='psql'))
@@ -201,7 +196,7 @@ if __name__ == '__main__':
     g.compute_first()
     g.compute_follow()
     act_tb, goto_tb = slr_parsing_table(g)
-    print_slr_table(act_tb, goto_tb)        
+    print_slr_table(act_tb, goto_tb)
 
     print("\n# Production rules for grammar 4.28")
     p = {"E" : [("T", "E2")],
@@ -213,9 +208,9 @@ if __name__ == '__main__':
     g = Grammar("E", p, ["E", "E2", "T", "T'", "F"],
                 ["+", "*", "(", ")", "id"])
     augment(g)
-    print("\n# Production rules for Example 4.32, pg. 225, Grammar 4.28.")    
+    print("\n# Production rules for Example 4.32, pg. 225, Grammar 4.28.")
     g.print_productions()
     g.compute_first()
     g.compute_follow()
     act_tb, goto_tb = slr_parsing_table(g)
-    print_slr_table(act_tb, goto_tb)    
+    print_slr_table(act_tb, goto_tb)
