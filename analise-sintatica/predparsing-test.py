@@ -11,11 +11,8 @@ class TestPredParsing(unittest.TestCase):
              "F" : [("(", "E", ")"), ("id",)]}
         g = Grammar("E", p, ["E", "E'", "T", "T'", "F"], ["+", "*", "(", ")", "id"])
         g.compute_first()
-        print("1")
         g.compute_follow()
-        print("2")
         g.compute_pred_parsing_tab()
-        print("3")
         self.assertEqual(g.first_tab, {'E': {'id', '('}, "E'": {'+', 'epsilon'}, 'T': {'id', '('}, "T'": {'*', 'epsilon'}, 'F': {'id', '('}, '+': {'+'}, '*': {'*'}, '(': {'('}, ')': {')'}, 'id': {'id'}})
         self.assertEqual(g.follow_tab, {'E': {')', '$'}, "E'": {')', '$'}, 'T': {'+', ')', '$'}, "T'": {'+', '$', ')'}, 'F': {'+', '$', ')', '*'}})
         self.assertEqual(g.pred_parsing_tab, {'E': {'+': [], '*': [], '(': ["E -> TE'"], ')': [], 'id': ["E -> TE'"], '$': []}, "E'": {'+': ["E' -> +TE'"], '*': [], '(': [], ')': ["E' -> epsilon"], 'id': [], '$': ["E' -> epsilon"]}, 'T': {'+': [], '*': [], '(': ["T -> FT'"], ')': [], 'id': ["T -> FT'"], '$': []}, "T'": {'+': ["T' -> epsilon"], '*': ["T' -> *FT'"], '(': [], ')': ["T' -> epsilon"], 'id': [], '$': ["T' -> epsilon"]}, 'F': {'+': [], '*': [], '(': ['F -> (E)'], ')': [], 'id': ['F -> id'], '$': []}})

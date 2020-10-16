@@ -82,7 +82,6 @@ class Grammar:
             x_1 = w[0]
             # "Add to FIRST(X_1 X_2 ... X_n) all non-epsilon symbols of
             # FIRST(X_1)."
-            
             first_w.update(self.first_tab[x_1])
             if 'epsilon' in first_w:
                 first_w.discard('epsilon')
@@ -110,6 +109,7 @@ class Grammar:
             if add_epsilon:
                 first_w.add('epsilon')
                 
+
             return first_w
         else:
             return set()
@@ -155,6 +155,7 @@ class Grammar:
                     # However, we only reach j if every k 1 <= k < j
                     # has been reached before.
 
+
                     if 'epsilon' in self.first_tab[y_ant]:
                     
                         if self.first_tab[y_i] == set():
@@ -162,6 +163,7 @@ class Grammar:
                             
                         for v in self.first_tab[y_i]:                 
                             self.first_tab[s].add(v)
+
 
                     
             # If all symbols in the rhs derive epsilon, than epsilon
@@ -224,7 +226,6 @@ class Grammar:
         # To compute FOLLOW(A), for all non terminals A,
         # apply the following rules until nothing can be
         # added to any FOLLOW set.
-        
         while True:
             tam_atual = self.follow_tab_size()
             for non in self.non_terminals:
@@ -248,7 +249,7 @@ class Grammar:
                     if beta != ():
                         # If there is a production A -> alpha􏰐B beta then everything in
                         # FIRST(beta),􏰚except epsilon, is in FOLLOW(B).
-                        
+                      
                         first_beta = self.firstW(beta)
                         for symbol in first_beta:
                             if symbol != 'epsilon':
@@ -289,6 +290,7 @@ class Grammar:
                     for a in self.firstW(alpha):
                         if a in self.terminals:
                             self.pred_parsing_tab[A][a].append(A + " -> " + "".join(alpha))
+
                     
     def print_pred_parsing_tab(self):
         # self.pp.pprint(self.pred_parsing_tab)
