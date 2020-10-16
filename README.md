@@ -20,3 +20,9 @@ Repositório atualizado com minha resolução da terceira atividade
 Para execução, usar python3 predparsing-test.py -v ou py predparsing-test.py -v.
 Código não funcional, first acredito estar correto mas o follow não. Apresenta erro no teste.(Antigo)
 **Código corrigido com ajuda de outros alunos, feito com o objetivo de preparar para o próximo trabalho, não para a atividade 3**
+
+# Atividade 4 - Análise Sintática - SLR
+
+Repositório atualizado com minha resolução da quarta atividade
+Para execução, usar python3 slr-test.py -v ou py slr-test.py -v.
+Os três primeiros testes foram passados(Até canonical items), por causa de alguns erros apresentados, não consegui programar o parsing_table.
