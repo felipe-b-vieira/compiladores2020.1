@@ -144,25 +144,36 @@ def slr_parsing_table(g):
                 #      and GOTO(Ii, a) = Ij then
                 #        set ACTION[i,􏰥a] =􏰙shift j.
                 #      Here a must be a terminal.􏰋
-
-                # Do your magic here!
-
+                if a in g.terminals:
+                    gotoI = goto(l, a, g)
+                    if gotoI in can:
+                        item = can.index(gotoI)
+                        if item:
+                            action_tab[state_l][a].append(('shift', item))
             else:
-                print("-"):
                 # (b) If [A -> alpha *] is in Ii, then set
                 # ACTION[i, a] = "reduce A -> alpha" to
                 # all a in FOLLOW(A); here A may not be S'.
                 # (c) If [S' -> S *] is in Ii, then set
                 # ACTION[i, $] = "accept".
+                if lhs != g.start_symbol:
+                    follow = g.follow_tab[lhs]
+                    for a in follow:
+                        action_tab[state_l][a].append(('reduce', (lhs, rhs)))
+                else:
+                    action_tab[state_l]['$'].append(('accept',))
 
-                # Do your magic here!
-                
         # 3. The goto transitions for state i are constructed for all
         # nonterminals A using the rule􏰗 If GOTO(Ii, A) = Ij 􏰉
         # then GOTO[i,􏰥A] = j.􏰋
+        for nt in g.non_terminals:
+            gotoI = goto(l, nt, g)
+            if len(gotoI) and gotoI in can:
+                item = can.index(gotoI)
+                if item:
+                    goto_tab[state_l][nt].append(item)
 
-                # Do your magic here!
-                
+
     return (action_tab, goto_tab)
 
 def print_slr_table(act_tb, goto_tb):
