@@ -25,4 +25,4 @@ Código não funcional, first acredito estar correto mas o follow não. Apresent
 
 Repositório atualizado com minha resolução da quarta atividade
 Para execução, usar python3 slr-test.py -v ou py slr-test.py -v.
-Os três primeiros testes foram passados(Até canonical items), por causa de alguns erros apresentados, não consegui programar o parsing_table.
+Após ajustes no first do predparsing, os 4 tests foram feitos com sucesso.
