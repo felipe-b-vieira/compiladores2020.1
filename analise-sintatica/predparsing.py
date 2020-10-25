@@ -70,8 +70,6 @@ class Grammar:
                 self.print_production(s, rhs)
 
     def compute_first(self):
-        for s in self.getSymbols():
-            self.first(s)
         
         while True:
             first_size = self.first_tab_size()
