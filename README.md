@@ -26,3 +26,10 @@ Código não funcional, first acredito estar correto mas o follow não. Apresent
 Repositório atualizado com minha resolução da quarta atividade
 Para execução, usar python3 slr-test.py -v ou py slr-test.py -v.
 Após ajustes no first do predparsing, os 4 tests foram feitos com sucesso.
+
+
+# Atividade 5 - Π em Python
+
+Repositório atualizado com minha resolução da quinta atividade
+Testes ajustados para serem aceitos, no entanto, o último arquivo necessitou de alterações no assertEqual para ser assertTrue e realmente poder comparar o estado.
+**Precisa ser verificar se essa alteração está correta ou precisa ser revertida**
