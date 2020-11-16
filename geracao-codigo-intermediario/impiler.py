@@ -20,6 +20,8 @@ class Impiler(object):
         
     def bin_exp(self, ast):
         if ast.op == "+":
+            if isinstance(ast.e1, pi.Array):
+                return pi.Append(ast.e1, ast.e2)
             return pi.Sum(ast.e1, ast.e2)
         elif ast.op == "-":
             return pi.Sub(ast.e1, ast.e2)        
@@ -40,7 +42,31 @@ class Impiler(object):
         elif ast.op == ">=":
             return pi.Ge(ast.e1, ast.e2)        
         elif ast.op == "==":
-            return pi.Eq(ast.e1, ast.e2)        
+            return pi.Eq(ast.e1, ast.e2)
+
+    def bin_exp_vet(self, ast):
+        if ast.op == "+":
+            return pi.Sum(ast.e1, ast.e2)
+        elif ast.op == "-":
+            return pi.Sub(ast.e1, ast.e2)
+        elif ast.op == "*":
+            return pi.Mul(ast.e1, ast.e2)
+        elif ast.op == "/":
+            return pi.Div(ast.e1, ast.e2)
+        elif ast.op == "and":
+            return pi.And(ast.e1, ast.e2)
+        elif ast.op == "or":
+            return pi.Or(ast.e1, ast.e2)
+        elif ast.op == "<":
+            return pi.Lt(ast.e1, ast.e2)
+        elif ast.op == "<=":
+            return pi.Le(ast.e1, ast.e2)
+        elif ast.op == ">":
+            return pi.Gt(ast.e1, ast.e2)
+        elif ast.op == ">=":
+            return pi.Ge(ast.e1, ast.e2)
+        elif ast.op == "==":
+            return pi.Eq(ast.e1, ast.e2)
     
     def truth(self, ast):
         return pi.Boo(bool(ast))
@@ -60,6 +86,16 @@ class Impiler(object):
             for i in range(1, len(ast.idn)):
                 bind = pi.DSeq(bind, pi.Bind(ast.idn[i], pi.Ref(ast.e[i])))
             return bind
+        else:
+            return pi.Bind(ast.idn, pi.Ref(ast.e))
+
+    def vet(self, ast):
+        if isinstance(ast.idn, list):
+            for x in range(0, ast.e[0]):
+                bind = pi.Bind(ast.idn[0], pi.Ref(x))
+                for i in range(1, len(ast.idn)):
+                    bind = pi.DSeq(bind, pi.Bind(ast.idn[i], pi.Ref(ast.e[i])))
+                return bind
         else:
             return pi.Bind(ast.idn, pi.Ref(ast.e))
 
@@ -151,3 +187,15 @@ class Impiler(object):
     def call(self, ast):
         actuals = [e for e in ast.a if e != ',']
         return pi.Call(ast.idn, actuals)
+
+    def array_exp(self, ast):
+        return pi.Array(ast.e)
+
+    def array_val(self, ast):
+        return pi.Array_val(ast.idn, ast.e)
+
+    def array_concat (self, ast):
+        return pi.Array_concat(ast.l, ast.r)
+
+    def array_atrib(self, ast):
+        return pi.Array_atrib(ast.idn, ast.idx, ast.e)

@@ -1,0 +1,9 @@
+var x = 0;
+var y = 3;
+y := [3];
+print(y);
+y := y ++ y;
+print(y);
+y := [6] + 3;
+print(y);
+print(x)

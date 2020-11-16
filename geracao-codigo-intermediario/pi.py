@@ -317,6 +317,10 @@ class ExpKW():
     AND = "#AND"
     OR = "#OR"
     NOT = "#NOT"
+    IDX = "#IDX"
+    APPEND = "#APPEND"
+    CONCAT = "CONCAT"
+    ASGN = "ASGN"
 
 class ExpPiAut(PiAutomaton):
 
@@ -535,6 +539,64 @@ class ExpPiAut(PiAutomaton):
         self.pushVal(not v)
 
 
+    def __evalArray(self, e):
+        a = e.operand(0)
+        self.pushVal(a)
+
+    def __evalArrayConcat(self, e):
+        e1 = e.operand(0)
+        e2 = e.operand(1)
+        self.pushCnt(ExpKW.CONCAT)
+        self.pushCnt(e1)
+        self.pushCnt(e2)
+
+    def __evalArrayConcatKW(self):
+        e1 = self.popVal()
+        e2 = self.popVal()
+        self.pushVal(e1 + e2)
+
+
+    def __evalArrayAppend(self, e):
+        l = e.operand(0)
+        r = e.operand(1)
+        self.pushCnt(ExpKW.APPEND)
+        self.pushCnt(l)
+        self.pushCnt(r)
+
+    def __evalArrayAppendKW(self):
+        l = self.popVal()
+        r = self.popVal()
+        lc = l.copy()
+        lc.append(Num(r))
+        self.pushVal(lc)
+
+    def __evalArrayVal(self, e):
+        idn = e.operand(0)
+        idx = e.operand(1)
+        self.pushCnt(ExpKW.IDX)
+        self.pushCnt(idn)
+        self.pushCnt(idx)
+
+    def __evalArrayValKW(self):
+        a = self.popVal()
+        idx = self.popVal()
+        self.pushVal(a[idx])
+
+    def __evalArrayAssign(self, e):
+        ai = e.operand(0)
+        e = e.operand(1)
+        self.pushCnt(ExpKW.LASG)
+        self.pushCnt(ExpKW.IDX)
+        self.pushCnt(ai.operand(0))
+        self.pushCnt(ai.operand(1))
+        self.pushCnt(e)
+
+    def __evalArrayAssignKW(self):
+        i = self.popVal()
+        a = self.popVal()
+        v = self.popVal()
+        self.pushVal(i)
+
     def eval(self):
         e = self.popCnt()
         if isinstance(e, Sum):
@@ -589,6 +651,24 @@ class ExpPiAut(PiAutomaton):
             self.__evalNot(e)
         elif e == ExpKW.NOT:
             self.__evalNotKW()
+        elif isinstance(e, Array):
+            self.__evalArray(e)
+        elif isinstance(e, Array_val):
+            self.__evalArrayVal(e)
+        elif e == ExpKW.IDX:
+            self.__evalArrayValKW()
+        elif isinstance(e, Array_concat):
+            self.__evalArrayConcat(e)
+        elif e == ExpKW.APPEND:
+            self.__evalArrayAppendKW()
+        elif isinstance(e, Append):
+            self.__evalArrayAppend(e)
+        elif e == ExpKW.CONCAT:
+            self.__evalArrayConcatKW()
+        elif isinstance(e, Array_atrib):
+            self.__evalArrayAssign()
+        elif e == ExpKW.LASG:
+            self.__evalArrayAssignKW()
         else:
             raise EvaluationError( \
                 "Don't know how to evaluate " + str(e) + " of type " + str(type(e)) + "." + \
@@ -630,7 +710,7 @@ class Assign(Cmd):
 
     def __init__(self, i, e):
         if isinstance(i, Id):
-            if isinstance(e, Exp):
+            if isinstance(e, Exp) or isinstance(e, Array):
                 Cmd.__init__(self, i, e)
             else:
                 raise IllFormed(self, e)
@@ -645,6 +725,56 @@ class Assign(Cmd):
     def rvalue(self):
         return self.operand(1)
 
+class Array(Statement):
+    def __init__(self, a):
+        if isinstance(a, list):
+            Statement.__init__(self, a)
+        elif isinstance(a, Num):
+            Statement.__init__(self, [a])
+        else:
+            raise IllFormed(self, a)
+
+class Array_val(Exp):
+    def __init__(self, idn, e):
+        if isinstance(idn, Id):
+            if isinstance(e, Exp):
+                Exp.__init__(self, idn, e)
+            else:
+                raise IllFormed(self, e)
+
+class Append(Exp):
+    def __init__(self, l, e):
+        if isinstance(l, Exp) or isinstance(l, Array):
+            if isinstance(e, Exp):
+                Exp.__init__(self, l, e)
+            else:
+                raise IllFormed(self, e)
+        else:
+            raise IllFormed(self, l)
+
+class Array_concat(Exp):
+    def __init__(self, l, r):
+        if isinstance(l, Exp) or isinstance(l, Array):
+            if isinstance(r, Exp) or isinstance(r, Array):
+                Exp.__init__(self, l, r)
+            else:
+                raise IllFormed(self, r)
+        else:
+            raise IllFormed(self, l)
+
+
+class Array_atrib(Statement):
+    def __init__(self, idn, idx, e):
+        if isinstance(idn, Id):
+            if isinstance(idx, Exp):
+                if isinstance(e, Exp):
+                    Statement.__init__(self, idn, idx, e)
+                else:
+                    raise IllFormed(self, e)
+            else:
+                raise IllFormed(self, idx)
+        else:
+            raise IllFormed(self, idn)
 
 class Loop(Cmd):
     def __init__(self, be, c):
@@ -885,7 +1015,7 @@ class Bind(Dec):
                 i = args[0]
                 e = args[1]
                 if isinstance(i, Id):
-                    if isinstance(e, Exp):
+                    if isinstance(e, Exp) or isinstance(e, Array):
                         Dec.__init__(self, i, e)
                     else:
                         raise IllFormed(self, e)

@@ -18,6 +18,7 @@
 @@keyword :: 'while' 
 @@keyword :: 'if' 'then' 'else' 
 @@keyword :: 'var' '='
+@@keyword :: 'vet' '='
 @@keyword :: 'const' '='
 @@keyword :: ';'
 @@keyword :: 'skip'
@@ -26,11 +27,19 @@
 
 start = [ds:decSeq] [cs:cmd_seq] $ ;
 
-exp = paren_exp | bin_exp | un_exp | @:atom ;
+exp = bin_exp | array_exp | array_concat | array_val |  paren_exp |  un_exp | @:atom ;
+
+array_val = idn:identifier "["e:exp"]" ;
+
+array_exp = "[" e:exp {','e:exp}* "]" | "[" e:exp "]";
+
+array_atrib = idn:identifier "["i:exp"]" op:":=" e:exp ;
+
+array_concat = l:array_exp "++" r:array_exp | l:array_exp "++" r:exp | l:exp "++" r:array_exp | l:exp "++" r:exp ;
 
 paren_exp = "(" e:exp ")" ;
 
-bin_exp = e1:exp op:binop e2:exp ;
+bin_exp = e1:array_exp op:binop e2:exp |  e1:exp op:binop e2:exp ;
 
 un_exp = op:"not" e:exp ;
 
@@ -60,7 +69,7 @@ atom_cmd = cond | loop | assign | print | call | skip ;
 
 skip = "skip" ;
 
-assign = idn:identifier op:":=" e:exp ;
+assign = array_atrib | idn:identifier op:":=" e:exp ;
 
 print = op:"print" e:exp ;
 

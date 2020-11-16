@@ -1,0 +1,17 @@
+vals = [54,26,93,17,77,31,44,55,20];
+var i = 9;
+var j = 0;
+var k = 0;
+var temp = 0;
+while (i > -1) {
+	white (j < i) {
+		j = i + 1;
+		if (vals[i] > vals[j]) {
+			temp = vals[i]
+			vals[i] = vals[j]
+			vals[j] = temp
+		};
+		i = i - 1;
+	};
+};
+print(vals);
