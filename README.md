@@ -33,3 +33,9 @@ Após ajustes no first do predparsing, os 4 tests foram feitos com sucesso.
 Repositório atualizado com minha resolução da quinta atividade
 Testes ajustados para serem aceitos, no entanto, o último arquivo necessitou de alterações no assertEqual para ser assertTrue e realmente poder comparar o estado.
 **Precisa ser verificar se essa alteração está correta ou precisa ser revertida**
+
+
+# Atividade 6 - Lista de inteiros em Pi
+
+Repositório atualizado com minha resolução da sexta atividade
+Teste inicial do bubble sorte e criação de operações(Com excessão da atribuição) das listas.
