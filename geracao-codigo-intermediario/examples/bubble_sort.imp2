@@ -3,7 +3,7 @@ var j = 0;
 var k = 0;
 var c1 = 0;
 var c2 = 0;
-var i = 7;
+var i = 0;
 var x = 0;
 var y = 3;
 
@@ -13,8 +13,13 @@ y := y ++ y;
 print(y);
 y := [6] + 3;
 print(y);
+x := @y;
+print(x);
 
 vals := [4, 5, 7, 6, 0, 3, 2, 1];
+i := @vals;
+i := i - 1;
+print(i);
 while (i > 0){
 	while (j < i){
 	    k := j + 1;

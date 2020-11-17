@@ -199,3 +199,6 @@ class Impiler(object):
 
     def array_atrib(self, ast):
         return pi.Array_atrib(ast.idn, ast.v, ast.e)
+
+    def array_len(self, ast):
+        return pi.Array_len(ast.idn)
