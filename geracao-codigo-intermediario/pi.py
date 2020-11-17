@@ -319,8 +319,8 @@ class ExpKW():
     NOT = "#NOT"
     IDX = "#IDX"
     APPEND = "#APPEND"
-    CONCAT = "CONCAT"
-    ASGN = "ASGN"
+    CONCAT = "#CONCAT"
+    ASGN = "#ASGN"
 
 class ExpPiAut(PiAutomaton):
 
@@ -583,19 +583,31 @@ class ExpPiAut(PiAutomaton):
         self.pushVal(a[idx])
 
     def __evalArrayAssign(self, e):
-        ai = e.operand(0)
-        e = e.operand(1)
-        self.pushCnt(ExpKW.LASG)
-        self.pushCnt(ExpKW.IDX)
-        self.pushCnt(ai.operand(0))
-        self.pushCnt(ai.operand(1))
-        self.pushCnt(e)
+        id = e.operand(0)
+        v = e.operand(1)
+        val = e.operand(2)
+        self.pushVal(id.id())
+        self.pushVal(v)
+        self.pushCnt(ExpKW.ASGN)
+        self.pushCnt(val)
 
     def __evalArrayAssignKW(self):
-        i = self.popVal()
-        a = self.popVal()
+        val = self.popVal()
         v = self.popVal()
-        self.pushVal(i)
+        id = self.popVal()
+        l = self.getBindable(id)
+        s = self.sto()
+        if isinstance(v, Id):
+            aux = self.getBindable(v.id())
+            v = s[aux]
+        nl = s[l]
+        if (not isinstance(val, Num)):
+            val = Num(val)
+        if(isinstance(v, int)):
+            nl[v] = val
+        else:
+            nl[v.num()] = val
+        self.updateStore(l, nl)
 
     def eval(self):
         e = self.popCnt()
@@ -666,8 +678,8 @@ class ExpPiAut(PiAutomaton):
         elif e == ExpKW.CONCAT:
             self.__evalArrayConcatKW()
         elif isinstance(e, Array_atrib):
-            self.__evalArrayAssign()
-        elif e == ExpKW.LASG:
+            self.__evalArrayAssign(e)
+        elif e == ExpKW.ASGN:
             self.__evalArrayAssignKW()
         else:
             raise EvaluationError( \
@@ -763,12 +775,12 @@ class Array_concat(Exp):
             raise IllFormed(self, l)
 
 
-class Array_atrib(Statement):
+class Array_atrib(Cmd):
     def __init__(self, idn, idx, e):
         if isinstance(idn, Id):
             if isinstance(idx, Exp):
                 if isinstance(e, Exp):
-                    Statement.__init__(self, idn, idx, e)
+                    Cmd.__init__(self, idn, idx, e)
                 else:
                     raise IllFormed(self, e)
             else:
@@ -846,7 +858,7 @@ class CmdKW:
     ASSIGN = "#ASSIGN"
     LOOP   = "#LOOP"
     COND   = "#COND"
-    PRINT  = "#PRINT" 
+    PRINT  = "#PRINT"
 
 class CmdPiAut(ExpPiAut):
 

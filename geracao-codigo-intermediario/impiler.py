@@ -198,4 +198,4 @@ class Impiler(object):
         return pi.Array_concat(ast.l, ast.r)
 
     def array_atrib(self, ast):
-        return pi.Array_atrib(ast.idn, ast.idx, ast.e)
+        return pi.Array_atrib(ast.idn, ast.v, ast.e)
