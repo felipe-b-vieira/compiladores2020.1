@@ -555,6 +555,11 @@ class ExpPiAut(PiAutomaton):
         e2 = self.popVal()
         self.pushVal(e1 + e2)
 
+    def __evalArrayLen(self, e):
+        id = e.len().id()
+        l = self.getBindable(id)
+        s = self.sto()
+        self.pushVal(len(s[l]))
 
     def __evalArrayAppend(self, e):
         l = e.operand(0)
@@ -681,6 +686,8 @@ class ExpPiAut(PiAutomaton):
             self.__evalArrayAssign(e)
         elif e == ExpKW.ASGN:
             self.__evalArrayAssignKW()
+        elif isinstance(e, Array_len):
+            self.__evalArrayLen(e)
         else:
             raise EvaluationError( \
                 "Don't know how to evaluate " + str(e) + " of type " + str(type(e)) + "." + \
@@ -722,7 +729,7 @@ class Assign(Cmd):
 
     def __init__(self, i, e):
         if isinstance(i, Id):
-            if isinstance(e, Exp) or isinstance(e, Array):
+            if isinstance(e, Exp) or isinstance(e, Array) or isinstance(e, Array_len):
                 Cmd.__init__(self, i, e)
             else:
                 raise IllFormed(self, e)
@@ -774,6 +781,16 @@ class Array_concat(Exp):
         else:
             raise IllFormed(self, l)
 
+
+class Array_len(Exp):
+    def __init__(self, idn):
+        if isinstance(idn, Id):
+            Exp.__init__(self, idn)
+        else:
+            raise IllFormed(self, idn)
+
+    def len(self):
+        return self.operand(0)
 
 class Array_atrib(Cmd):
     def __init__(self, idn, idx, e):

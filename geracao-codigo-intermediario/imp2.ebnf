@@ -27,13 +27,15 @@
 
 start = [ds:decSeq] [cs:cmd_seq] $ ;
 
-exp = bin_exp | array_exp | array_concat | array_val | paren_exp |  un_exp | @:atom ;
+exp = array_len | bin_exp | array_exp | array_concat | array_val | paren_exp | un_exp | @:atom ;
 
 array_val = idn:identifier "["e:exp"]" ;
 
 array_exp = "["e:exp {','e:exp}*"]" | "["e:exp"]" ;
 
 array_atrib = idn:identifier "["v:exp"]" op:":=" e:exp ;
+
+array_len = "@" idn:identifier ;
 
 array_concat = l:array_exp "++" r:array_exp | l:array_exp "++" r:exp | l:exp "++" r:array_exp | l:exp "++" r:exp ;
 
