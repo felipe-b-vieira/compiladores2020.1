@@ -41,7 +41,7 @@ array_concat = l:array_exp "++" r:array_exp | l:array_exp "++" r:exp | l:exp "++
 
 paren_exp = "(" e:exp ")" ;
 
-bin_exp = e1:array_exp op:binop e2:exp |  e1:exp op:binop e2:exp ;
+bin_exp = e1:exp op:binop e2:exp ;
 
 un_exp = op:"not" e:exp ;
 
