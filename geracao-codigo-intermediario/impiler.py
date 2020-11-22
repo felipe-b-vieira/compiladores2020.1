@@ -202,3 +202,6 @@ class Impiler(object):
 
     def array_len(self, ast):
         return pi.Array_len(ast.idn)
+
+    def return_fn(self, ast):
+        return pi.Return_fn(ast.e)

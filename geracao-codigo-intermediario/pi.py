@@ -321,6 +321,7 @@ class ExpKW():
     APPEND = "#APPEND"
     CONCAT = "#CONCAT"
     ASGN = "#ASGN"
+    RETURN = "#RETURN"
 
 class ExpPiAut(PiAutomaton):
 
@@ -538,6 +539,33 @@ class ExpPiAut(PiAutomaton):
         v = self.popVal()
         self.pushVal(not v)
 
+    def __evalReturn(self, e):
+        e = e.operand(0)
+        self.pushCnt(ExpKW.RETURN)
+        self.pushCnt(e)
+
+    def __evalReturnKW(self):
+        v = self.popVal()
+        env = self.popVal()
+        self.popVal()
+        self.popVal()
+        self.popVal()
+        f = self.popVal()
+        '''s = self.popVal()
+        self.popVal()
+        self.popCnt()
+        self.popCnt()
+        self.pushVal(v)
+        self.pushVal(s)
+        self["env"] = env'''
+        self['val'] = [[],[],{},[0]]
+        self.pushVal(f)
+        self.pushVal(v)
+        self.pushVal([])
+        self.pushVal(env)
+        self.popCnt()
+        self.popCnt()
+
 
     def __evalArray(self, e):
         a = e.operand(0)
@@ -688,6 +716,10 @@ class ExpPiAut(PiAutomaton):
             self.__evalArrayAssignKW()
         elif isinstance(e, Array_len):
             self.__evalArrayLen(e)
+        elif e == ExpKW.RETURN:
+            self.__evalReturnKW()
+        elif isinstance(e, Return_fn):
+            self.__evalReturn(e)
         else:
             raise EvaluationError( \
                 "Don't know how to evaluate " + str(e) + " of type " + str(type(e)) + "." + \
@@ -729,7 +761,7 @@ class Assign(Cmd):
 
     def __init__(self, i, e):
         if isinstance(i, Id):
-            if isinstance(e, Exp) or isinstance(e, Array) or isinstance(e, Array_len):
+            if isinstance(e, Exp) or isinstance(e, Array) or isinstance(e, Array_len) or isinstance(e, Call):
                 Cmd.__init__(self, i, e)
             else:
                 raise IllFormed(self, e)
@@ -743,6 +775,14 @@ class Assign(Cmd):
 
     def rvalue(self):
         return self.operand(1)
+
+
+class Return_fn(Cmd):
+    def __init__(self, e):
+        if isinstance(e, Exp):
+            Cmd.__init__(self, e)
+        else:
+            raise IllFormed(self, e)
 
 class Array(Statement):
     def __init__(self, a):
