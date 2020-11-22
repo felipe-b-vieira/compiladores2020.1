@@ -27,11 +27,7 @@
 
 start = [ds:decSeq] [cs:cmd_seq] $ ;
 
-<<<<<<< HEAD
 exp = call | array_len | bin_exp | array_exp | array_concat | array_val | paren_exp | un_exp | @:atom ;
-=======
-exp = array_len | bin_exp | array_exp | array_concat | array_val | paren_exp | un_exp | @:atom ;
->>>>>>> cb26441b0f8d34b1508c76b16e5304487dc4b515
 
 array_val = idn:identifier "["e:exp"]" ;
 
