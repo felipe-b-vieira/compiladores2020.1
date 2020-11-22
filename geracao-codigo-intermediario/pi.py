@@ -558,13 +558,17 @@ class ExpPiAut(PiAutomaton):
         self.pushVal(v)
         self.pushVal(s)
         self["env"] = env'''
-        self['val'] = [[],[],{},[0]]
+        self['val'] = [[],[],{}]
+        self.pushVal(env)
         self.pushVal(f)
         self.pushVal(v)
-        self.pushVal([])
-        self.pushVal(env)
-        self.popCnt()
-        self.popCnt()
+
+        ctn = self.popCnt()
+        while ctn != "#BLKCMD":
+            ctn = self.popCnt()
+        while ctn == "#BLKCMD":
+            ctn = self.popCnt()
+        self.pushCnt(ctn)
 
 
     def __evalArray(self, e):
