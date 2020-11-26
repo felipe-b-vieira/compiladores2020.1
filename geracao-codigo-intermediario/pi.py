@@ -546,23 +546,17 @@ class ExpPiAut(PiAutomaton):
 
     def __evalReturnKW(self):
         v = self.popVal()
+        clean = self.popVal()
+        while isinstance(clean,list) or isinstance(clean,dict):
+            clean = self.popVal()
+        f = clean
         env = self.popVal()
-        self.popVal()
-        self.popVal()
-        self.popVal()
-        f = self.popVal()
-        '''s = self.popVal()
-        self.popVal()
-        self.popCnt()
-        self.popCnt()
-        self.pushVal(v)
-        self.pushVal(s)
-        self["env"] = env'''
         self['val'] = [[],[],{}]
         self.pushVal(env)
         self.pushVal(f)
         self.pushVal(v)
 
+        ctn = self.popCnt()
         ctn = self.popCnt()
         while ctn != "#BLKCMD":
             ctn = self.popCnt()
