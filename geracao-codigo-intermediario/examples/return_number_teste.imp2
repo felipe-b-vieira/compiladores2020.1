@@ -1,0 +1,9 @@
+var z = 1 ;
+var y = 1;
+def fat (x) {
+    z := x ;
+    z := 1;
+    return 2
+}
+y := fat(3) ;
+print(y)
