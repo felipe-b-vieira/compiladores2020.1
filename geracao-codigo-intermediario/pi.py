@@ -546,16 +546,19 @@ class ExpPiAut(PiAutomaton):
 
     def __evalReturnKW(self):
         v = self.popVal()
+        #Limpa valores de if e while
         clean = self.popVal()
         while isinstance(clean,list) or isinstance(clean,dict):
             clean = self.popVal()
         f = clean
+        #retorna ao estado original antes da função, define valores padrões para terminar a função
         env = self.popVal()
         self['val'] = [[],[],{}]
         self.pushVal(env)
         self.pushVal(f)
         self.pushVal(v)
 
+        #Limpa a pilha de controles até sair do Loop
         ctn = self.popCnt()
         ctn = self.popCnt()
         while ctn != "#BLKCMD":
